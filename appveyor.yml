@@ -94,5 +94,5 @@ artifacts:
 deploy_script:
   - ps: >-
       if($env:appveyor_repo_tag -eq 'True') {
-          Invoke-Expression "$env:PYTHON/Scripts/twine upload dist/* --repository $env:pypi_repository --username $env:pypi_username --password $env:pypi_password"
+        Invoke-Expression "$env:PYTHON/Scripts/twine upload dist/* --repository $env:pypi_repository --username $env:pypi_username --password $env:pypi_password"
       }

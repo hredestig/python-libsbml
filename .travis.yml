@@ -6,69 +6,64 @@ services: docker
 env:
   global:
   - PLAT=x86_64
-
 git:
   depth: 1
-
 branches:
   only:
   - master
-
 matrix:
   fast_finish: true
   exclude:
-    - python: 3.5
+  - python: 3.5
   include:
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=2.7
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.4
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.5
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
-    - os: osx
-      language: objective-c
-      env:
-        - MB_PYTHON_VERSION=2.7
-    - os: osx
-      language: objective-c
-      env:
-        - MB_PYTHON_VERSION=3.4
-    - os: osx
-      language: objective-c
-      env:
-        - MB_PYTHON_VERSION=3.5
-    - os: osx
-      language: objective-c
-      env:
-        - MB_PYTHON_VERSION=3.6
-
+  - os: linux
+    env:
+    - MB_PYTHON_VERSION=2.7
+  - os: linux
+    env:
+    - MB_PYTHON_VERSION=3.4
+  - os: linux
+    env:
+    - MB_PYTHON_VERSION=3.5
+  - os: linux
+    env:
+    - MB_PYTHON_VERSION=3.6
+  - os: osx
+    language: objective-c
+    env:
+    - MB_PYTHON_VERSION=2.7
+  - os: osx
+    language: objective-c
+    env:
+    - MB_PYTHON_VERSION=3.4
+  - os: osx
+    language: objective-c
+    env:
+    - MB_PYTHON_VERSION=3.5
+  - os: osx
+    language: objective-c
+    env:
+    - MB_PYTHON_VERSION=3.6
 before_install:
-  - (travis_retry git clone https://github.com/matthew-brett/multibuild.git && cd multibuild && git checkout e6ebbfa);
-  - TEST_DEPENDS="nose"
-  - source multibuild/common_utils.sh
-  - source multibuild/travis_steps.sh
-  - before_install
-  - pip install -U pip setuptools wheel tox
-
+- (travis_retry git clone https://github.com/matthew-brett/multibuild.git && cd multibuild
+  && git checkout e6ebbfa);
+- TEST_DEPENDS="nose"
+- source multibuild/common_utils.sh
+- source multibuild/travis_steps.sh
+- before_install
+- pip install -U pip setuptools wheel tox
 install:
-  - build_wheel . $PLAT
-
+- build_wheel . $PLAT
 before_cache:
-  - set +e
-
+- set +e
 script:
-  - install_run $PLAT
-
+- install_run $PLAT
 deploy:
-  provider: script
+  provider: s3
+  access_key_id: AKIAI46HBJLY3NLP2W4A
+  secret_access_key:
+    secure: lhW7SDLBMFK++sqbUXp+9BwWJldX+mPl0s39X14A7pOSUjWqK/IgZAquTZZ2XE09rrNmLCIB4ijo/SprW7UNecz3wG+FEfUzDZujmbvq/DjJNsEhc02C4Jq4fat1izXLBhLpeFxZI5T8RcgQfAw0lqmStRPASkppF4YCybF0fTL9yGzCDBCeatbPFIRJ0dppHBoMrj6sywiVqUdymJfwEQHWcqeOtaBJyJZHyi6RDP0tL/naY/gJZJCWri0PVX52yVI2mcoM9jxI2R9oEXH3awxL98iCf7RCN2HMpm/prC3PSdhIYrmeGwqLTY+yx4grrcuACNq2TJuVzN0UOzzX7EQ/g7y47G4gdAFBsWYwMfaN3MsOnyZxZC0x25EccPG3XjxH8jK8wIUzxSHjRbwQxAVkKkBnnl97sYYT8omC66hnyGV89UZDgKTB3dge9dwuPIC0qTe5a+i8iqwBndPEqk+Bmt8k+JeBd1dF7zp02U+njbg2NN1H1l69beSeIPb64IQUSYWtSi/POJVpLWOQo5Gk1q2sPN+6f+sEin+zQYIiJwAj5XWEt5Ay4fuAazLlubjxU1YaKFM2lgCJAlyJomtfdoCaslzz56l0WxZjanOVONsx0fbcxlcLCcmlGcjEnhZHme1GgWJCJt9b6YX8QTv4Ayo68h9JtLWahhE2plk=
+  bucket: S3 Bucket
   skip_cleanup: true
-  script: deploy/deploy.sh
   on:
-    branch: master
-    tags: true
+    branch: wheels
